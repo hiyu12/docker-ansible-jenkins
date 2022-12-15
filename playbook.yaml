@@ -1,0 +1,29 @@
+- name: Install Dependency
+  hosts: web
+  become: True
+
+  tasks:
+  - name: Install python
+    apt:
+      name: python-pip
+      state: present
+  - name: Install Docker 
+    apt:
+      name: docker.io
+      state: latest
+  - name: Start Docker  
+    service:
+      name: docker
+      state: started
+  - name: Install docker-py modules
+    pip:
+      name: docker-py
+      state: present
+  - name: Start container
+    docker_container:
+      name: myapp
+      image: "akash5791/myapp:{{DOCKER_TAG}}"
+      state: started
+      published_ports:
+        - 0.0.0.0:8080:8080
+
